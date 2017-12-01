@@ -1,0 +1,2 @@
+rdot[r_, omega_, mu_] = mu*r - r^3
+thetadot[r_, omega_, mu_] = omega + v*r^2
