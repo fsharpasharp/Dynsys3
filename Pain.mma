@@ -1,6 +1,0 @@
-Clear[x, y, r]
-lhs = {{x/r, y/r}, {-y/r^2, x/r^2}}
-inv = Inverse[lhs]
-rhs = {{r (\[Mu] - r^2)}, {\[Omega] + \[Nu] r^2}}
-Simplify[inv . rhs /. {r -> Sqrt[x^2+y^2], r^2 -> x^2 + y^2}]
-
