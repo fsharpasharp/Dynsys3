@@ -1,0 +1,10 @@
+Clear[x, y, r]
+lhs = {{x/r, y/r}, {-y/r^2, x/r^2}}
+inv = Inverse[lhs]
+rhs = {{r (\[Mu] - r^2)}, {\[Omega] + \[Nu] r^2}}
+{xdot, ydot} = Simplify[inv . rhs /. {r -> Sqrt[x^2+y^2], r^2 -> x^2 + y^2}]
+
+task1a[r] := StreamPlot[{xdot[x, y, r]}]
+
+
+task31[mu_] := StreamPlot[{xdot1[x, y, mu], ydot1[x, y, mu]}, {x, -2, 2}, {y, -2, 2}, ImageSize -> Large]
