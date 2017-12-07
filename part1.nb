@@ -1,27 +1,27 @@
-Clear[x, y, r]
+Clear[x,e y, r]
 lhs = {{x/r, y/r}, {-y/r^2, x/r^2}}
 inv = Inverse[lhs]
 rhs = {{r (\[Mu] - r^2)}, {\[Omega] + \[Nu] r^2}}
 sol = Simplify[inv . rhs /. {r -> Sqrt[x^2+y^2], r^2 -> x^2 + y^2}]
 xdot[x_, y_] = sol[[1,1]]
 ydot[x_, y_] = sol[[2,1]]
+
 \[Mu] = 1
 \[Nu] = 1
 \[Omega] = 1 
-pic = StreamPlot[{xdot[x, y], ydot[x, y]}, {x, -2, 2}, {y, -2, 2}, PlotLabel -> "Stream plot of the system"]
+pic = StreamPlot[{xdot[x, y], ydot[x, y]}, {x, -2, 2}, {y, -2, 2}]
 solution[x0_, y0_, color_] := (temp = NDSolve[{x'[t] == xdot[x[t], y[t]], y'[t] == ydot[x[t], y[t]], x[0] == x0, y[0] == y0}, {x, y}, {t, 0, 100}];
 Return[ParametricPlot[Evaluate[First[{x[t], y[t]}/.temp]], {t, 0, 30}, ImageSize -> Large, PlotStyle -> color]]);
 show1 = Show[pic, solution[1, 1, red]
 Export["streamplot1b.png", show1]
 
-(*task1c*)
 
+(*task1c*)
 xdot = {x1/10 - (x2^3) - x1*x2^2 - (x1^2)*x2 - x2 - x1^3,
 x1 + x2/10 + x1*x2^2 + x1^3 - x2^3 - (x1^2)*x2}
 J = D[xdot, {{x1, x2}}]
 J = J /. {x1 -> x1[t], x2 -> x2[t]}
 xdot = xdot /. {x1 -> x1[t], x2 -> x2[t]}
-
 Clear[M]
 sols = NDSolve[{
 M'[t] == J . M[t],
@@ -29,5 +29,32 @@ M[0] == IdentityMatrix[2],
 Thread[{x1'[t], x2'[t]} == xdot],
 Thread[{x1[0], x2[0]} == {1, 0}]},
 {M, x1, x2}, {t, 0, 200}]
-Export["cool.png", ParametricPlot[First[{x1[t], x2[t]} /. sols], {t, 0, 200}]]
+Export["cool.png", ParametricPlot[First[{x1[t], x2[t]} /. sols], {t, 100, 105.7019}, ImageSize -> Large]]
+P[t_] = First[{x1[t], x2[t]} /. sols]
 M[t_] =  First[Evaluate[M[t] /. sols]]
+
+
+(*task1d*)
+periodtime = 2* Pi / (1+1/10)
+M[periodtime]
+
+(*task1e*)
+Clear[r, \[Mu], \[Nu], \[Omega], \[Theta], f, g, t]
+f[r_] = {\[Mu] r - r^3, \[Omega] + \[Nu] r^2}
+\[Mu] = 1/10
+\[Nu] = 1
+\[Omega] = 1
+r = Sqrt[\[Mu]]
+test = First @ DSolve[{r'[t] == f[r[t]][[1]]}, r, t]
+J = D[f[r], {{r, \[Theta]}}]
+EigenSystem[J]
+
+N[g[2]]
+
+
+(*task2a*)
+
+
+o
+
+
