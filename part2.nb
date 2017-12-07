@@ -21,3 +21,15 @@ x[0] == x0, y[0] == y0, z[0] == z0}
 Return[ParametricPlot3D[Evaluate[First[{x[t], y[t], x[t]} /. temp]], {t, 0, 100}, ImageSize -> Large, PlotStyle -> color]])
 show1 = Show[solution[2, 3, 1, apple6[[1]]]]
 Export["stream2a.png", show1]
+
+Clear[t, f, solution]
+solution[x0_, y0_, z0_] := (NDSolve[{
+x'[t] == xdot[x[t], y[t], z[t]],
+y'[t] == ydot[x[t], y[t], z[t]],
+z'[t] == zdot[x[t], y[t], z[t]],
+x[0] == x0, y[0] == y0, z[0] == z0}
+, {x, y, z}, {t, 0, 100}])
+f[t_] = {x[t], y[t], z[t]} /. solution[2, 3, 1]
+f[80]
+
+
