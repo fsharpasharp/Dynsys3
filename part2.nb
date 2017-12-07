@@ -51,7 +51,7 @@ J[x_, y_, z_] = {J1, J2, J3}
 eye = IdentityMatrix[3]
 Q = eye;
 startTime = 200
-iterations = 200000
+iterations = 1000000
 sol = f[startTime]
 currentJ = J[sol[[1]], sol[[2]], sol[[3]]]
 lambdas = {0, 0, 0}
@@ -63,7 +63,7 @@ Q = Transpose[Q];
 lambdas = lambdas + (Log @* Abs @* Diagonal @ R);
 sol = f[startTime + tN];
 currentJ = J[sol[[1]], sol[[2]], sol[[3]]]; 
-lambdas}, {iteration, 1, iterations}]
+lambdas}, {iteration, 1, iterations}];
 M
 lambdas/(iterations*deltat)
 
