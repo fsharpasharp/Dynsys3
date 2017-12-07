@@ -5,15 +5,14 @@ rhs = {{r (\[Mu] - r^2)}, {\[Omega] + \[Nu] r^2}}
 sol = Simplify[inv . rhs /. {r -> Sqrt[x^2+y^2], r^2 -> x^2 + y^2}]
 xdot[x_, y_] = sol[[1,1]]
 ydot[x_, y_] = sol[[2,1]]
-
 \[Mu] = 1
 \[Nu] = 1
 \[Omega] = 1 
 pic = StreamPlot[{xdot[x, y], ydot[x, y]}, {x, -2, 2}, {y, -2, 2}]
 solution[x0_, y0_, color_] := (temp = NDSolve[{x'[t] == xdot[x[t], y[t]], y'[t] == ydot[x[t], y[t]], x[0] == x0, y[0] == y0}, {x, y}, {t, 0, 100}];
 Return[ParametricPlot[Evaluate[First[{x[t], y[t]}/.temp]], {t, 0, 30}, ImageSize -> Large, PlotStyle -> color]]);
-show1 = Show[pic, solution[1, 1, red]
-Export["streamplot1b.png", show1]
+show1 = Show[pic, solution[1, 1, red]]
+Export["1bstreamplot.eps", show1]
 
 
 (*task1c*)
@@ -27,16 +26,17 @@ sols = NDSolve[{
 M'[t] == J . M[t],
 M[0] == IdentityMatrix[2],
 Thread[{x1'[t], x2'[t]} == xdot],
-Thread[{x1[0], x2[0]} == {1, 0}]},
+Thread[{x1[0], x2[0]} == {0, Sqrt[1/10]}]},
 {M, x1, x2}, {t, 0, 200}]
-Export["cool.png", ParametricPlot[First[{x1[t], x2[t]} /. sols], {t, 100, 105.7019}, ImageSize -> Large]]
+Export["1ctrajectories.eps", ParametricPlot[First[{x1[t], x2[t]} /. sols], {t, 100, 105.7019}, ImageSize -> Large]]
 P[t_] = First[{x1[t], x2[t]} /. sols]
 M[t_] =  First[Evaluate[M[t] /. sols]]
-
-
 (*task1d*)
 periodtime = 2* Pi / (1+1/10)
 M[periodtime]
+
+Eigenvalues[M[periodtime]] 
+{1, 0.319053} (* Put this in LaTeX *)
 
 (*task1e*)
 Clear[r, \[Mu], \[Nu], \[Omega], \[Theta], f, g, t]
@@ -44,17 +44,13 @@ f[r_] = {\[Mu] r - r^3, \[Omega] + \[Nu] r^2}
 \[Mu] = 1/10
 \[Nu] = 1
 \[Omega] = 1
-r = Sqrt[\[Mu]]
-test = First @ DSolve[{r'[t] == f[r[t]][[1]]}, r, t]
 J = D[f[r], {{r, \[Theta]}}]
-EigenSystem[J]
+r = Sqrt[\[Mu]]
+es = Eigensystem[J]
+Vectorone[t_] = Exp[es[[1,1]] t] {es[[2,1]]} (-Sqrt[10])
+Vectortwo[t_] = Exp[es[[1,2]] t] {es[[2,2]]} (Sqrt[10])
+coolio = First[Vectorone[t] + Vectortwo[t]]
+{{coolio[[1]], 0}, {coolio[[2]], 1}}
 
-N[g[2]]
-
-
-(*task2a*)
-
-
-o
 
 
