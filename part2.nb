@@ -1,1 +1,13 @@
-xdot 
+sigma = 10
+b = 8/3
+r = 28
+xdot[x_, y_] = sigma*(y - x)
+ydot[x_, y_] = r*x - y - x * z
+xdot[x_, y_] = x*y - b * z
+
+NDSolve[{x'[t] == xdot[x[t], y[t], z[t]], y'[t] == ydot[x[t], y[t], z[t]], z'[t] == zdot[x[t], y[t], z[t]], x[0] == 0.01, y[0] == 0.01, z[0] == 0.01}, {x, y, z}, {t, 0, 100}]
+
+solution[x0_, y0_, z0_, color_] := (temp = NDSolve[{x'[t] == xdot[x[t], y[t], z[t]], y'[t] == ydot[x[t], y[t], z[t]], z'[t] == zdot[x[t], y[t], z[t]], x[0] == x0, y[0] == y0, z[0] == z0}, {x, y, z}, {t, 0, 100}];
+Return[ParametricPlot3D[Evaluate[First[{x[t], y[t], x[t]}/.temp]], {t, 0, 30}, ImageSize -> Large, PlotStyle -> color]]);
+show1 = Show[solution[0.01, 0.01, 0.01, Red]]
+Export["stream2a.png", show1]
