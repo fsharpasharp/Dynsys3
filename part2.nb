@@ -32,4 +32,7 @@ x[0] == x0, y[0] == y0, z[0] == z0}
 f[t_] = {x[t], y[t], z[t]} /. solution[2, 3, 1]
 f[80]
 
-
+Q = IdentityMatrix[3]
+J = JacobianMatrix[f[80]]
+M = Q + J
+QRDecomposition[M*Q]
