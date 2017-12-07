@@ -39,10 +39,10 @@ x'[t] == xdot[x[t], y[t], z[t]],
 y'[t] == ydot[x[t], y[t], z[t]],
 z'[t] == zdot[x[t], y[t], z[t]],
 x[0] == x0, y[0] == y0, z[0] == z0}
-, {x, y, z}, {t, 0, 600}])
+, {x, y, z}, {t, 0, 1200}])
 f[t_] = First[{x[t], y[t], z[t]} /. solution[2, 3, 1]]
 f[80]
-deltat = 1*^-5
+deltat = 5*^-5
 lambdas = {0, 0, 0}
 J1 = D[xdot[x,y,z], {{x, y, z}}]
 J2 = D[ydot[x,y,z], {{x, y, z}}]
@@ -51,7 +51,7 @@ J[x_, y_, z_] = {J1, J2, J3}
 eye = IdentityMatrix[3]
 Q = eye;
 startTime = 200
-iterations = 1000000
+iterations = 20000000
 sol = f[startTime]
 currentJ = J[sol[[1]], sol[[2]], sol[[3]]]
 lambdas = {0, 0, 0}
@@ -67,4 +67,46 @@ lambdas}, {iteration, 1, iterations}];
 M
 lambdas/(iterations*deltat)
 
+sum =Total[lambdas/(iterations*deltat)]
 
+Clear[t, f, solution, J]
+\[Sigma] = 16
+b = 4
+r = 46
+xdot[x_, y_, z_] = \[Sigma]*(y - x)
+ydot[x_, y_, z_] = r*x - y - x * z
+zdot[x_, y_, z_] = x*y - b * z
+solution[x0_, y0_, z0_] := (NDSolve[{
+x'[t] == xdot[x[t], y[t], z[t]],
+y'[t] == ydot[x[t], y[t], z[t]],
+z'[t] == zdot[x[t], y[t], z[t]],
+x[0] == x0, y[0] == y0, z[0] == z0}
+, {x, y, z}, {t, 0, 1200}])
+f[t_] = First[{x[t], y[t], z[t]} /. solution[2, 3, 1]]
+f[80]
+deltat = 5*^-5
+lambdas = {0, 0, 0}
+J1 = D[xdot[x,y,z], {{x, y, z}}]
+J2 = D[ydot[x,y,z], {{x, y, z}}]
+J3 = D[zdot[x,y,z], {{x, y, z}}]
+J[x_, y_, z_] = {J1, J2, J3}
+eye = IdentityMatrix[3]
+Q = eye;
+startTime = 200
+iterations = 20000000
+sol = f[startTime]
+currentJ = J[sol[[1]], sol[[2]], sol[[3]]]
+lambdas = {0, 0, 0}
+Table[{
+tN = deltat * iteration;
+M = eye + currentJ * deltat;
+{Q, R} = QRDecomposition[M . Q];
+Q = Transpose[Q];
+lambdas = lambdas + (Log @* Abs @* Diagonal @ R);
+sol = f[startTime + tN];
+currentJ = J[sol[[1]], sol[[2]], sol[[3]]]; 
+lambdas}, {iteration, 1, iterations}];
+M
+lambdas/(iterations*deltat)
+
+sum =Total[lambdas/(iterations*deltat)]
