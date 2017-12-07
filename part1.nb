@@ -26,7 +26,7 @@ sols = NDSolve[{
 M'[t] == J . M[t],
 M[0] == IdentityMatrix[2],
 Thread[{x1'[t], x2'[t]} == xdot],
-Thread[{x1[0], x2[0]} == {0, Sqrt[1/10]}]},
+Thread[{x1[0], x2[0]} == {Sqrt[1/10], 0}]},
 {M, x1, x2}, {t, 0, 200}]
 Export["1ctrajectories.eps", ParametricPlot[First[{x1[t], x2[t]} /. sols], {t, 100, 105.7019}, ImageSize -> Large]]
 P[t_] = First[{x1[t], x2[t]} /. sols]
@@ -50,7 +50,9 @@ es = Eigensystem[J]
 Vectorone[t_] = Exp[es[[1,1]] t] {es[[2,1]]} (-Sqrt[10])
 Vectortwo[t_] = Exp[es[[1,2]] t] {es[[2,2]]} (Sqrt[10])
 coolio = First[Vectorone[t] + Vectortwo[t]]
-{{coolio[[1]], 0}, {coolio[[2]], 1}}
-
-
-
+final = {{coolio[[1]], 0}, {coolio[[2]], 1}}
+coolmatrix = {{Cos[\[Phi]], -r Sin[\[Phi]]}, {Sin[\[Phi]], r Cos[\[Phi]]}}
+coolmatrix1 = Inverse[coolmatrix] /. \[Phi] -> 2 * Pi
+coolmatrix2 = coolmatrix /. \[Phi] -> 0
+t = periodtime
+N[Simplify[coolmatrix1 . final . coolmatrix2]]
