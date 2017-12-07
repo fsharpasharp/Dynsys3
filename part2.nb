@@ -1,13 +1,23 @@
-sigma = 10
+blue = RGBColor[17.6/100, 41.6/100, 63.1/100];
+green = RGBColor[34.9/100, 66.7/100, 33.3/100];
+yellow = RGBColor[96.9/100, 68.6/100, 20.8/100];
+red = RGBColor[86.3/100, 13.3/100, 19.6/100];
+purple = RGBColor[55.3/100, 27.5/100, 55.7/100];
+grey = RGBColor[55.7/100, 57.3/100, 56.9/100];
+apple6 = {blue, green, yellow, red, purple, grey}; 
+\[Sigma] = 10
 b = 8/3
 r = 28
-xdot[x_, y_] = sigma*(y - x)
-ydot[x_, y_] = r*x - y - x * z
-xdot[x_, y_] = x*y - b * z
-
-NDSolve[{x'[t] == xdot[x[t], y[t], z[t]], y'[t] == ydot[x[t], y[t], z[t]], z'[t] == zdot[x[t], y[t], z[t]], x[0] == 0.01, y[0] == 0.01, z[0] == 0.01}, {x, y, z}, {t, 0, 100}]
-
-solution[x0_, y0_, z0_, color_] := (temp = NDSolve[{x'[t] == xdot[x[t], y[t], z[t]], y'[t] == ydot[x[t], y[t], z[t]], z'[t] == zdot[x[t], y[t], z[t]], x[0] == x0, y[0] == y0, z[0] == z0}, {x, y, z}, {t, 0, 100}];
-Return[ParametricPlot3D[Evaluate[First[{x[t], y[t], x[t]}/.temp]], {t, 0, 30}, ImageSize -> Large, PlotStyle -> color]]);
-show1 = Show[solution[0.01, 0.01, 0.01, Red]]
+xdot[x_, y_, z_] = \[Sigma]*(y - x)
+ydot[x_, y_, z_] = r*x - y - x * z
+zdot[x_, y_, z_] = x*y - b * z
+solution[x0_, y0_, z0_, color_] := (
+temp = NDSolve[{
+x'[t] == xdot[x[t], y[t], z[t]],
+y'[t] == ydot[x[t], y[t], z[t]],
+z'[t] == zdot[x[t], y[t], z[t]],
+x[0] == x0, y[0] == y0, z[0] == z0}
+, {x, y, z}, {t, 0, 100}];
+Return[ParametricPlot3D[Evaluate[First[{x[t], y[t], x[t]} /. temp]], {t, 0, 100}, ImageSize -> Large, PlotStyle -> color]])
+show1 = Show[solution[2, 3, 1, apple6[[1]]]]
 Export["stream2a.png", show1]
