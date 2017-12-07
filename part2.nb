@@ -55,14 +55,15 @@ iterations = 200000
 sol = f[startTime]
 currentJ = J[sol[[1]], sol[[2]], sol[[3]]]
 lambdas = {0, 0, 0}
-Table[
+Table[{
 tN = deltat * iteration;
 M = eye + currentJ * deltat;
 {Q, R} = QRDecomposition[M . Q];
 Q = Transpose[Q];
 lambdas = lambdas + (Log @* Abs @* Diagonal @ R);
 sol = f[startTime + tN];
-currentJ = J[sol[[1]], sol[[2]], sol[[3]]];, {iteration, 1, iterations}];
+currentJ = J[sol[[1]], sol[[2]], sol[[3]]]; 
+lambdas}, {iteration, 1, iterations}]
 M
 lambdas/(iterations*deltat)
 
