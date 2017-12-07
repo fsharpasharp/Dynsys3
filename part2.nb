@@ -39,30 +39,31 @@ x'[t] == xdot[x[t], y[t], z[t]],
 y'[t] == ydot[x[t], y[t], z[t]],
 z'[t] == zdot[x[t], y[t], z[t]],
 x[0] == x0, y[0] == y0, z[0] == z0}
-, {x, y, z}, {t, 0, 400}])
+, {x, y, z}, {t, 0, 600}])
 f[t_] = First[{x[t], y[t], z[t]} /. solution[2, 3, 1]]
 f[80]
-eye = IdentityMatrix[3]
 deltat = 1*^-5
 lambdas = {0, 0, 0}
 J1 = D[xdot[x,y,z], {{x, y, z}}]
 J2 = D[ydot[x,y,z], {{x, y, z}}]
 J3 = D[zdot[x,y,z], {{x, y, z}}]
 J[x_, y_, z_] = {J1, J2, J3}
+eye = IdentityMatrix[3]
 Q = eye;
-startTime = 80
-sol = f[80]
+startTime = 200
+iterations = 200000
+sol = f[startTime]
 currentJ = J[sol[[1]], sol[[2]], sol[[3]]]
+lambdas = {0, 0, 0}
 Table[
 tN = deltat * iteration;
-M = eye + currentJ deltat;
-rhs = QRDecomposition[M . Q];
-Q = rhs[[1]];
-Rnew = rhs[[2]];
-lambdas = (Log @* Abs @* Diagonal @ Rnew)/(deltat * iteration);
+M = eye + currentJ * deltat;
+{Q, R} = QRDecomposition[M . Q];
+Q = Transpose[Q];
+lambdas = lambdas + (Log @* Abs @* Diagonal @ R);
 sol = f[startTime + tN];
-currentJ = J[sol[[1]], sol[[2]], sol[[3]]], {iteration, 1, 50000}];
+currentJ = J[sol[[1]], sol[[2]], sol[[3]]];, {iteration, 1, iterations}];
 M
-lambdas
+lambdas/(iterations*deltat)
 
 
